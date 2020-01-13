@@ -1,0 +1,68 @@
+{% extends "dashboard/base.html" %}
+
+{% block content %}
+
+    <h1>Unit rates for {{ current_date }}</h1>
+
+    <canvas id="chart" width="100%" height="40"></canvas>
+
+    <ul>
+        {% for unit_rate in unit_rates_list %}
+            <li>
+                {% if unit_rate.valid_from < current_time and unit_rate.valid_to > current_time %}
+                    <div class="alert alert-danger d-inline-block">
+                        Between <strong>{{ unit_rate.valid_from|date:"G:i" }}</strong>
+                        and <strong>{{ unit_rate.valid_to|date:"G:i" }}</strong>:
+                        {{ unit_rate.value }}p
+                    </div>
+                {% else %}
+                    Between <strong>{{ unit_rate.valid_from|date:"G:i" }}</strong>
+                    and <strong>{{ unit_rate.valid_to|date:"G:i" }}</strong>:
+                    {{ unit_rate.value }}p
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+
+{% endblock content %}
+
+{% block extrascripts %}
+    <script id="unit-rates" data-unit-rates="{{ unit_rates_json }}">
+        const unitRates = JSON.parse(document.getElementById('unit-rates').dataset.unitRates);
+
+        let unitRatesData = [],
+            unitRatesLabels = [];
+        unitRates.forEach((c) => {
+            if (c["valid_from"].indexOf(':00') > -1) {
+                unitRatesLabels.push(c["valid_from"]);
+            } else {
+                unitRatesLabels.push("");
+            }
+            unitRatesData.push(c["value"]);
+        });
+
+        const ctx = document.getElementById('chart');
+        const myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: unitRatesLabels,
+                datasets: [{
+                    // TODO: make this better...
+                    backgroundColor: Chart.helpers.color('rgb(153, 102, 255)').alpha(0.5).rgbString(),
+                    label: 'Pence',
+                    data: unitRatesData,
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
+    </script>
+{% endblock extrascripts %}
