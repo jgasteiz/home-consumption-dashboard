@@ -2,53 +2,31 @@
 
 {% block content %}
 
-    <div>
-        <h1>Home consumption on {{ selected_date }}</h1>
-        <a
-            {% if previous_date %}
-                class="btn btn-primary btn-lg"
-                href="{% url 'dashboard' %}?date={{ previous_date }}"
-            {% else %}
-                class="btn btn-primary btn-lg disabled"
-            {% endif %}
-        >
-            <-
-        </a>
-        <a
-            {% if next_date %}
-                class="btn btn-primary btn-lg"
-                href="{% url 'dashboard' %}?date={{ next_date }}"
-            {% else %}
-                class="btn btn-primary btn-lg disabled"
-            {% endif %}
-        >
-            ->
-        </a>
-    </div>
+    <h1>Unit rates for {{ selected_date }}</h1>
 
     <canvas id="chart" width="100%" height="40"></canvas>
 
 {% endblock content %}
 
 {% block extrascripts %}
-    <script id="consumption" data-consumption="{{ consumption_json }}">
-        const consumption = JSON.parse(document.getElementById('consumption').dataset.consumption);
+    <script id="unit-rates" data-unit-rates="{{ unit_rates_json }}">
+        const unitRates = JSON.parse(document.getElementById('unit-rates').dataset.unitRates);
 
-        let consumptionData = [],
-            consumptionLabels = [];
-        consumption.forEach((c) => {
-            consumptionLabels.push(`${c.interval_start} to ${c.interval_end}`);
-            consumptionData.push(c.consumption);
+        let unitRatesData = [],
+            unitRatesLabels = [];
+        unitRates.forEach((c) => {
+            unitRatesLabels.push(`${c["valid_from"]}} to ${c["valid_to"]}`);
+            unitRatesData.push(c["value"]);
         });
 
         const ctx = document.getElementById('chart');
         const myChart = new Chart(ctx, {
             type: 'bar',
             data: {
-                labels: consumptionLabels,
+                labels: unitRatesLabels,
                 datasets: [{
-                    label: 'KWh',
-                    data: consumptionData,
+                    label: 'Pence',
+                    data: unitRatesData,
                     borderWidth: 1
                 }]
             },

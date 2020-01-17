@@ -125,4 +125,7 @@ STATIC_URL = "/static/"
 API_KEY = os.environ["API_KEY"]
 MPAN = os.environ["MPAN"]
 METER_SERIAL_NUMBER = os.environ["METER_SERIAL_NUMBER"]
+PRODUCT_CODE = os.environ["PRODUCT_CODE"]
+TARIFF_CODE = os.environ["TARIFF_CODE"]
+ELECTRICITY_RATES_URL = f"https://api.octopus.energy/v1/products/{PRODUCT_CODE}/electricity-tariffs/{TARIFF_CODE}/standard-unit-rates/"
 ELECTRICITY_CONSUMPTION_URL = f"https://api.octopus.energy/v1/electricity-meter-points/{MPAN}/meters/{METER_SERIAL_NUMBER}/consumption/"

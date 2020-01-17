@@ -1,0 +1,66 @@
+{% extends "dashboard/base.html" %}
+
+{% block content %}
+
+    <div>
+        <h1>Home consumption on {{ selected_date }}</h1>
+        <a
+            {% if previous_date %}
+                class="btn btn-primary btn-lg"
+                href="{% url 'consumption' %}?date={{ previous_date }}"
+            {% else %}
+                class="btn btn-primary btn-lg disabled"
+            {% endif %}
+        >
+            <-
+        </a>
+        <a
+            {% if next_date %}
+                class="btn btn-primary btn-lg"
+                href="{% url 'consumption' %}?date={{ next_date }}"
+            {% else %}
+                class="btn btn-primary btn-lg disabled"
+            {% endif %}
+        >
+            ->
+        </a>
+    </div>
+
+    <canvas id="chart" width="100%" height="40"></canvas>
+
+{% endblock content %}
+
+{% block extrascripts %}
+    <script id="consumption" data-consumption="{{ consumption_json }}">
+        const consumption = JSON.parse(document.getElementById('consumption').dataset.consumption);
+
+        let consumptionData = [],
+            consumptionLabels = [];
+        consumption.forEach((c) => {
+            consumptionLabels.push(`${c.interval_start} to ${c.interval_end}`);
+            consumptionData.push(c.consumption);
+        });
+
+        const ctx = document.getElementById('chart');
+        const myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: consumptionLabels,
+                datasets: [{
+                    label: 'KWh',
+                    data: consumptionData,
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
+    </script>
+{% endblock extrascripts %}
