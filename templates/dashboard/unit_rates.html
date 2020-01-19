@@ -6,6 +6,24 @@
 
     <canvas id="chart" width="100%" height="40"></canvas>
 
+    <ul>
+        {% for unit_rate in unit_rates_list %}
+            <li>
+                {% if unit_rate.valid_from < current_time and unit_rate.valid_to > current_time %}
+                    <div class="alert alert-danger d-inline-block">
+                        Between <strong>{{ unit_rate.valid_from|date:"G:i" }}</strong>
+                        and <strong>{{ unit_rate.valid_to|date:"G:i" }}</strong>:
+                        {{ unit_rate.value }}p
+                    </div>
+                {% else %}
+                    Between <strong>{{ unit_rate.valid_from|date:"G:i" }}</strong>
+                    and <strong>{{ unit_rate.valid_to|date:"G:i" }}</strong>:
+                    {{ unit_rate.value }}p
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+
 {% endblock content %}
 
 {% block extrascripts %}
@@ -15,7 +33,11 @@
         let unitRatesData = [],
             unitRatesLabels = [];
         unitRates.forEach((c) => {
-            unitRatesLabels.push(`${c["valid_from"]}} to ${c["valid_to"]}`);
+            if (c["valid_from"].indexOf(':00') > -1) {
+                unitRatesLabels.push(c["valid_from"]);
+            } else {
+                unitRatesLabels.push("");
+            }
             unitRatesData.push(c["value"]);
         });
 
