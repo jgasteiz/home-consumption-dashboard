@@ -9,14 +9,55 @@ from data import models
 from . import helpers
 
 
-def get_unit_rates(selected_date: datetime.date) -> List[dict]:
+def get_unit_rates_on_date(date: datetime.date) -> List[dict]:
     """
     Get a list of unit rates for the given date.
     """
     return models.UnitRate.objects.filter(
-        valid_from__gte=helpers.midnight(selected_date),
-        valid_from__lte=helpers.next_midnight(selected_date),
+        valid_from__gte=helpers.midnight(date),
+        valid_from__lte=helpers.next_midnight(date),
     ).order_by("valid_from")
+
+
+def get_consumption_on_date(date: datetime.date) -> List[dict]:
+    """
+    Get consumption data on a given date.
+    """
+    consumption_list = models.Consumption.objects.filter(
+        interval_start__gte=helpers.midnight(date),
+        interval_end__lte=helpers.next_midnight(date),
+    ).order_by("interval_start")
+    unit_rates_on_date = get_unit_rates_on_date(date)
+    consumption_with_unit_rate = zip(consumption_list, unit_rates_on_date)
+    consumption_on_date = []
+    for consumption, unit_rate in consumption_with_unit_rate:
+        payable_in_pence = consumption.consumption * unit_rate.value_inc_vat
+        consumption_on_date.append(
+            {
+                "consumption": consumption.consumption,
+                "interval_start": consumption.interval_start.strftime("%H:%M"),
+                "interval_end": consumption.interval_end.strftime("%H:%M"),
+                "value_inc_vat": unit_rate.value_inc_vat,
+                "payable_in_pence": payable_in_pence,
+            }
+        )
+    return consumption_on_date
+
+
+def get_payable_on_date(consumption_entry_list: List[dict]) -> decimal.Decimal:
+    """
+    Get payable in £ of a given list of consumption entries that contains the payable amount
+    per entry in pence.
+    """
+    return sum([entry["payable_in_pence"] for entry in consumption_entry_list]) / 100
+
+
+def get_usage_on_date(consumption_entry_list: List[dict]) -> decimal.Decimal:
+    """
+    Get usage in kWh of a given list of consumption entries that contains the usage amount
+    per entry in kWh.
+    """
+    return sum([entry["consumption"] for entry in consumption_entry_list])
 
 
 def get_consumption_available_dates() -> List[str]:
@@ -46,28 +87,3 @@ def get_previous_and_next_dates(
     if previous_date not in date_list:
         previous_date = None
     return previous_date, next_date
-
-
-def get_consumption_on_date(date: datetime.date) -> List[dict]:
-    """
-    Get consumption data on a given date.
-    """
-    consumption_list = models.Consumption.objects.filter(
-        interval_start__gte=helpers.midnight(date),
-        interval_end__lte=helpers.next_midnight(date),
-    ).order_by("interval_start")
-    return [
-        {
-            "consumption": decimal.Decimal(c.consumption),
-            "interval_start": c.interval_start.strftime("%H:%M"),
-            "interval_end": c.interval_end.strftime("%H:%M"),
-        }
-        for c in consumption_list
-    ]
-
-
-def get_usage_on_date(consumption_entry_list: List[dict]) -> decimal.Decimal:
-    """
-    Get usage in kWh of a given list of consumption entries.
-    """
-    return sum([entry["consumption"] for entry in consumption_entry_list])

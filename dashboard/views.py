@@ -9,7 +9,7 @@ from . import consumption_helpers, helpers, serializers
 def unit_rates(request):
     current_time = helpers.now()
     current_date = helpers.date(current_time)
-    unit_rates_list = consumption_helpers.get_unit_rates(current_date)
+    unit_rates_list = consumption_helpers.get_unit_rates_on_date(current_date)
     serializer = serializers.UnitRateSerializer(instance=unit_rates_list, many=True)
     unit_rates_json = json.dumps(serializer.data)
 
@@ -34,12 +34,15 @@ def consumption(request):
 
     consumption_on_date = consumption_helpers.get_consumption_on_date(selected_date)
     usage_on_date = consumption_helpers.get_usage_on_date(consumption_on_date)
+    payable_on_date = consumption_helpers.get_payable_on_date(consumption_on_date)
 
     return render(
         request,
         "dashboard/consumption.html",
         context={
             "usage_on_date": usage_on_date,
+            "payable_on_date": payable_on_date,
+            # TODO: use a serializer for this
             "consumption_json": json.dumps(consumption_on_date, cls=DjangoJSONEncoder),
             "selected_date": selected_date.isoformat(),
             "next_date": next_date,
