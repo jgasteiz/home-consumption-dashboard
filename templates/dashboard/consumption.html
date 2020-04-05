@@ -4,6 +4,7 @@
 
     <div>
         <h1>Home consumption on {{ selected_date }}</h1>
+        <h2>Total usage on this day: {{ usage_on_date }} kWh</h2>
         <a
             {% if previous_date %}
                 class="btn btn-primary btn-lg"
