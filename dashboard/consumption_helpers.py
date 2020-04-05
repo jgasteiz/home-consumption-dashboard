@@ -2,11 +2,7 @@ import datetime
 import decimal
 from typing import List, Optional, Tuple
 
-import requests
 from dateutil.relativedelta import relativedelta
-from django.conf import settings
-from django.core.cache import cache
-from requests.auth import HTTPBasicAuth
 
 from data import models
 
@@ -17,26 +13,10 @@ def get_unit_rates(selected_date: datetime.date) -> List[dict]:
     """
     Get a list of unit rates for the given date.
     """
-    unit_rate_list = cache.get("unit_rates")
-    if unit_rate_list:
-        return unit_rate_list
-
-    response = requests.get(
-        settings.ELECTRICITY_RATES_URL, auth=HTTPBasicAuth(settings.API_KEY, ""),
-    )
-    response_json = response.json()
-    unit_rate_list = [
-        {
-            "valid_from": helpers.parse_date_time(result["valid_from"]),
-            "valid_to": helpers.parse_date_time(result["valid_to"]),
-            "value": result["value_inc_vat"],
-        }
-        for result in response_json["results"]
-        if helpers.parse_date_time(result["valid_from"]).date() == selected_date
-    ]
-    unit_rate_list.reverse()
-    cache.set("unit_rates", unit_rate_list, 3600)
-    return unit_rate_list
+    return models.UnitRate.objects.filter(
+        valid_from__gte=helpers.midnight(selected_date),
+        valid_from__lte=helpers.next_midnight(selected_date),
+    ).order_by("valid_from")
 
 
 def get_consumption_available_dates() -> List[str]:

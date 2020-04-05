@@ -4,3 +4,4 @@ envparse==0.2.0
 ipdb==0.12.3
 python-dateutil==2.8.1
 gunicorn==20.0.4
+djangorestframework==3.11.0

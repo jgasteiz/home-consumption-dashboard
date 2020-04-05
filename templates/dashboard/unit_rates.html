@@ -13,12 +13,12 @@
                     <div class="alert alert-danger d-inline-block">
                         Between <strong>{{ unit_rate.valid_from|date:"G:i" }}</strong>
                         and <strong>{{ unit_rate.valid_to|date:"G:i" }}</strong>:
-                        {{ unit_rate.value }}p
+                        {{ unit_rate.value_inc_vat }}p
                     </div>
                 {% else %}
                     Between <strong>{{ unit_rate.valid_from|date:"G:i" }}</strong>
                     and <strong>{{ unit_rate.valid_to|date:"G:i" }}</strong>:
-                    {{ unit_rate.value }}p
+                    {{ unit_rate.value_inc_vat }}p
                 {% endif %}
             </li>
         {% endfor %}
@@ -38,7 +38,7 @@
             } else {
                 unitRatesLabels.push("");
             }
-            unitRatesData.push(c["value"]);
+            unitRatesData.push(c["value_inc_vat"]);
         });
 
         const ctx = document.getElementById('chart');
