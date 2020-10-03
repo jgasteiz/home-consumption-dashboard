@@ -20,6 +20,10 @@ class ElectricityConsumption(BaseConsumption):
     pass
 
 
+class GasConsumption(BaseConsumption):
+    pass
+
+
 class UnitRate(models.Model):
     value_exc_vat = models.DecimalField(decimal_places=4, max_digits=10)
     value_inc_vat = models.DecimalField(decimal_places=4, max_digits=10)
