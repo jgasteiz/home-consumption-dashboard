@@ -19,7 +19,7 @@ def _get_consumption(url: str):
     print(f"Getting consumption for {url}")
     response = requests.get(url, auth=HTTPBasicAuth(settings.API_KEY, ""),)
     for result in response.json()["results"]:
-        entry, created = models.Consumption.objects.get_or_create(
+        entry, created = models.ElectricityConsumption.objects.get_or_create(
             interval_start=result["interval_start"],
             interval_end=result["interval_end"],
             consumption=decimal.Decimal(result["consumption"]),

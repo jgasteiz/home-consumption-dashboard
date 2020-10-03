@@ -13,7 +13,9 @@ class Command(BaseCommand):
     help = "Load consumption"
 
     def handle(self, *args, **kwargs):
-        earliest_consumption = models.Consumption.objects.earliest("interval_start")
+        earliest_consumption = models.ElectricityConsumption.objects.earliest(
+            "interval_start"
+        )
         _get_unit_rates_until_date(
             url=settings.ELECTRICITY_RATES_URL,
             until_date=earliest_consumption.interval_start.date(),
