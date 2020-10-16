@@ -1,0 +1,1 @@
+from ._api import load_electricity_consumption, load_gas_consumption
