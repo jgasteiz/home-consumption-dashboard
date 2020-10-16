@@ -1,1 +1,2 @@
-from ._api import load_electricity_consumption, load_gas_consumption
+from ._api import *
+from ._queries import *

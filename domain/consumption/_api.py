@@ -7,6 +7,11 @@ from requests.auth import HTTPBasicAuth
 
 from data import models
 
+__all__ = [
+    "load_electricity_consumption",
+    "load_gas_consumption",
+]
+
 
 def load_electricity_consumption():
     """

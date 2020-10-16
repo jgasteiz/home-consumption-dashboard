@@ -1,15 +1,20 @@
 import datetime
 import decimal
-from typing import List, Optional, Tuple, Union
+from typing import List, Optional, Tuple
 
-import requests
 from dateutil.relativedelta import relativedelta
-from django.conf import settings
-from requests.auth import HTTPBasicAuth
 
+from dailyconsumption import localtime
 from data import models
 
-from . import helpers
+__all__ = [
+    "get_unit_rates_on_date",
+    "get_consumption_on_date",
+    "get_payable_on_date",
+    "get_usage_on_date",
+    "get_consumption_available_dates",
+    "get_previous_and_next_dates",
+]
 
 
 def get_unit_rates_on_date(date: datetime.date) -> List[dict]:
@@ -17,8 +22,8 @@ def get_unit_rates_on_date(date: datetime.date) -> List[dict]:
     Get a list of unit rates for the given date.
     """
     return models.UnitRate.objects.filter(
-        valid_from__gte=helpers.midnight(date),
-        valid_from__lte=helpers.next_midnight(date),
+        valid_from__gte=localtime.midnight(date),
+        valid_from__lte=localtime.next_midnight(date),
     ).order_by("valid_from")
 
 
@@ -27,8 +32,8 @@ def get_consumption_on_date(date: datetime.date) -> List[dict]:
     Get consumption data on a given date.
     """
     consumption_list = models.ElectricityConsumption.objects.filter(
-        interval_start__gte=helpers.midnight(date),
-        interval_end__lte=helpers.next_midnight(date),
+        interval_start__gte=localtime.midnight(date),
+        interval_end__lte=localtime.next_midnight(date),
     ).order_by("interval_start")
     unit_rates_on_date = get_unit_rates_on_date(date)
     consumption_with_unit_rate = zip(consumption_list, unit_rates_on_date)
