@@ -9,7 +9,7 @@ from domain import consumption, unit_rates
 from . import serializers
 
 
-def unit_rates(request):
+def unit_rates_dashboard(request):
     current_time = localtime.now()
     current_date = localtime.date(current_time)
     unit_rates_list = unit_rates.get_unit_rates_on_date(current_date)
@@ -28,7 +28,7 @@ def unit_rates(request):
     )
 
 
-def home_consumption(request):
+def consumption_dashboard(request):
     date_list = consumption.get_consumption_available_dates()
     selected_date = localtime.parse_date(request.GET.get("date", date_list[0]))
     previous_date, next_date = localtime.get_previous_and_next_dates(date_list, selected_date)
