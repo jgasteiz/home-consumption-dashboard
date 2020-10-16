@@ -122,8 +122,20 @@ STATIC_URL = "/static/"
 # Environment variables for fetching the consumption using Octopus Energy API.
 API_KEY = os.environ["API_KEY"]
 MPAN = os.environ["MPAN"]
+MPRN = os.environ["MPRN"]
 ELECTRICITY_METER_SERIAL_NUMBER = os.environ["ELECTRICITY_METER_SERIAL_NUMBER"]
+GAS_METER_SERIAL_NUMBER = os.environ["GAS_METER_SERIAL_NUMBER"]
 PRODUCT_CODE = os.environ["PRODUCT_CODE"]
 TARIFF_CODE = os.environ["TARIFF_CODE"]
-ELECTRICITY_RATES_URL = f"https://api.octopus.energy/v1/products/{PRODUCT_CODE}/electricity-tariffs/{TARIFF_CODE}/standard-unit-rates/"
-ELECTRICITY_CONSUMPTION_URL = f"https://api.octopus.energy/v1/electricity-meter-points/{MPAN}/meters/{ELECTRICITY_METER_SERIAL_NUMBER}/consumption/"
+ELECTRICITY_RATES_URL = (
+    f"https://api.octopus.energy/v1/products/{PRODUCT_CODE}/electricity-tariffs/{TARIFF_CODE}"
+    f"/standard-unit-rates/"
+)
+ELECTRICITY_CONSUMPTION_URL = (
+    f"https://api.octopus.energy/v1/electricity-meter-points/{MPAN}/meters"
+    f"/{ELECTRICITY_METER_SERIAL_NUMBER}/consumption/"
+)
+GAS_CONSUMPTION_URL = (
+    f"https://api.octopus.energy/v1/gas-meter-points/{MPRN}/meters/{GAS_METER_SERIAL_NUMBER}"
+    f"/consumption/"
+)
