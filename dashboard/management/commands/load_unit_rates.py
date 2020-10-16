@@ -13,9 +13,7 @@ class Command(BaseCommand):
     help = "Load consumption"
 
     def handle(self, *args, **kwargs):
-        earliest_consumption = models.ElectricityConsumption.objects.earliest(
-            "interval_start"
-        )
+        earliest_consumption = models.ElectricityConsumption.objects.earliest("interval_start")
         _get_unit_rates_until_date(
             url=settings.ELECTRICITY_RATES_URL,
             until_date=earliest_consumption.interval_start.date(),
@@ -24,7 +22,7 @@ class Command(BaseCommand):
 
 def _get_unit_rates_until_date(url: str, until_date: datetime.date):
     print(f"Getting unit rates for {url}")
-    response = requests.get(url, auth=HTTPBasicAuth(settings.API_KEY, ""),)
+    response = requests.get(url, auth=HTTPBasicAuth(settings.API_KEY, ""))
     latest_entry = None
     for result in response.json()["results"]:
         entry, created = models.UnitRate.objects.get_or_create(

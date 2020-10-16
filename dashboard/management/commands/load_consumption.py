@@ -17,7 +17,7 @@ class Command(BaseCommand):
 
 def _get_consumption(url: str):
     print(f"Getting consumption for {url}")
-    response = requests.get(url, auth=HTTPBasicAuth(settings.API_KEY, ""),)
+    response = requests.get(url, auth=HTTPBasicAuth(settings.API_KEY, ""))
     for result in response.json()["results"]:
         entry, created = models.ElectricityConsumption.objects.get_or_create(
             interval_start=result["interval_start"],

@@ -65,9 +65,7 @@ def get_consumption_available_dates() -> List[str]:
     Get a list available consumption dates taken from the existing consumption data in the db.
     """
     latest_consumption = models.ElectricityConsumption.objects.latest("interval_start")
-    earliest_consumption = models.ElectricityConsumption.objects.earliest(
-        "interval_start"
-    )
+    earliest_consumption = models.ElectricityConsumption.objects.earliest("interval_start")
     date = latest_consumption.interval_start.date()
     date_list = []
     while date >= earliest_consumption.interval_start.date():

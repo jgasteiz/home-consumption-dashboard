@@ -6,25 +6,30 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('data', '0001_initial'),
+        ("data", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='UnitRate',
+            name="UnitRate",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('value_exc_vat', models.DecimalField(decimal_places=4, max_digits=10)),
-                ('value_inc_vat', models.DecimalField(decimal_places=4, max_digits=10)),
-                ('valid_from', models.DateTimeField()),
-                ('valid_to', models.DateTimeField()),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
+                    ),
+                ),
+                ("value_exc_vat", models.DecimalField(decimal_places=4, max_digits=10)),
+                ("value_inc_vat", models.DecimalField(decimal_places=4, max_digits=10)),
+                ("valid_from", models.DateTimeField()),
+                ("valid_to", models.DateTimeField()),
             ],
             options={
-                'ordering': ['-valid_to'],
+                "ordering": ["-valid_to"],
             },
         ),
         migrations.AlterModelOptions(
-            name='consumption',
-            options={'ordering': ['-interval_end']},
+            name="consumption",
+            options={"ordering": ["-interval_end"]},
         ),
     ]

@@ -7,17 +7,21 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Consumption',
+            name="Consumption",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('consumption', models.DecimalField(decimal_places=4, max_digits=10)),
-                ('interval_start', models.DateTimeField()),
-                ('interval_end', models.DateTimeField()),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
+                    ),
+                ),
+                ("consumption", models.DecimalField(decimal_places=4, max_digits=10)),
+                ("interval_start", models.DateTimeField()),
+                ("interval_end", models.DateTimeField()),
             ],
         ),
     ]
