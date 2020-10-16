@@ -4,7 +4,7 @@ from django.core.serializers.json import DjangoJSONEncoder
 from django.shortcuts import render
 
 from dailyconsumption import localtime
-from domain import consumption
+from domain import consumption, unit_rates
 
 from . import serializers
 
@@ -12,7 +12,7 @@ from . import serializers
 def unit_rates(request):
     current_time = localtime.now()
     current_date = localtime.date(current_time)
-    unit_rates_list = consumption.get_unit_rates_on_date(current_date)
+    unit_rates_list = unit_rates.get_unit_rates_on_date(current_date)
     serializer = serializers.UnitRateSerializer(instance=unit_rates_list, many=True)
     unit_rates_json = json.dumps(serializer.data)
 
