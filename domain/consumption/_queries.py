@@ -1,6 +1,6 @@
 import datetime
 import decimal
-from typing import List, Optional, Tuple
+from typing import List
 
 from dateutil.relativedelta import relativedelta
 
@@ -13,7 +13,6 @@ __all__ = [
     "get_payable_on_date",
     "get_usage_on_date",
     "get_consumption_available_dates",
-    "get_previous_and_next_dates",
 ]
 
 
@@ -70,18 +69,3 @@ def get_consumption_available_dates() -> List[str]:
         date_list.append(date.isoformat())
         date = date - relativedelta(days=1)
     return date_list
-
-
-def get_previous_and_next_dates(
-    date_list: List[str], selected_date: datetime.date
-) -> Tuple[Optional[str], Optional[str]]:
-    """
-    Return the previous and next dates of a selected date, using a list of dates as boundaries.
-    """
-    next_date = (selected_date + relativedelta(days=1)).isoformat()
-    if next_date not in date_list:
-        next_date = None
-    previous_date = (selected_date - relativedelta(days=1)).isoformat()
-    if previous_date not in date_list:
-        previous_date = None
-    return previous_date, next_date

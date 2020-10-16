@@ -31,7 +31,7 @@ def unit_rates(request):
 def home_consumption(request):
     date_list = consumption.get_consumption_available_dates()
     selected_date = localtime.parse_date(request.GET.get("date", date_list[0]))
-    previous_date, next_date = consumption.get_previous_and_next_dates(date_list, selected_date)
+    previous_date, next_date = localtime.get_previous_and_next_dates(date_list, selected_date)
 
     consumption_on_date = consumption.get_consumption_on_date(selected_date)
     usage_on_date = consumption.get_usage_on_date(consumption_on_date)

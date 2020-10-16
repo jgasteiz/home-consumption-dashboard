@@ -1,6 +1,9 @@
+import datetime
 import datetime as datetime_
+from typing import List, Optional, Tuple
 
 import pytz
+from dateutil import relativedelta
 from django.utils import timezone
 
 UTC = pytz.UTC
@@ -51,3 +54,18 @@ def next_midnight(_date=None, tz=None):
 def datetime_from_date(_date, hour, tz=None):
     naive_datetime = datetime_.datetime.combine(_date, datetime_.time(hour))
     return timezone.make_aware(naive_datetime, timezone=tz)
+
+
+def get_previous_and_next_dates(
+    date_list: List[str], selected_date: datetime.date
+) -> Tuple[Optional[str], Optional[str]]:
+    """
+    Return the previous and next dates of a selected date, using a list of dates as boundaries.
+    """
+    next_date = (selected_date + relativedelta.relativedelta(days=1)).isoformat()
+    if next_date not in date_list:
+        next_date = None
+    previous_date = (selected_date - relativedelta.relativedelta(days=1)).isoformat()
+    if previous_date not in date_list:
+        previous_date = None
+    return previous_date, next_date
