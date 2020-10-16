@@ -12,15 +12,6 @@ unit rates and consumption, which will only be available if you're an Agile cust
 
 ## How to get this up and running
 
-### Install dependencies and create db
-
-```shell script
-# Create a virutal env, install the requirements and create the db.
-mkvirtualenv home-consumption-dashboard
-pip install -r requirements.txt
-./manage.py migrate
-```
-
 ### Fill in environment variables
 
 ```shell script
@@ -37,6 +28,15 @@ MPAN=
 METER_SERIAL_NUMBER=
 PRODUCT_CODE=
 TARIFF_CODE=
+```
+
+### Install dependencies and create db
+
+```shell script
+# Create a virutal env, install the requirements and create the db.
+mkvirtualenv home-consumption-dashboard
+pip install -r requirements.txt
+./manage.py migrate
 ```
 
 
