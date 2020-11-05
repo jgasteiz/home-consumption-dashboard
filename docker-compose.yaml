@@ -1,0 +1,38 @@
+version: '3'
+
+services:
+  db:
+    image: library/postgres:latest
+    environment:
+      - POSTGRES_DB=consumption
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+  web:
+    build: .
+    command: >
+      bash -c "python manage.py migrate
+      && python manage.py load_consumption
+      && python manage.py load_unit_rates
+      && python manage.py runserver 0.0.0.0:8080"
+    volumes:
+      - .:/code
+    environment:
+      - API_KEY=$API_KEY
+      - MPAN=$MPAN
+      - ELECTRICITY_METER_SERIAL_NUMBER=$ELECTRICITY_METER_SERIAL_NUMBER
+      - PRODUCT_CODE=$PRODUCT_CODE
+      - TARIFF_CODE=$TARIFF_CODE
+      - MPRN=$MPRN
+      - GAS_METER_SERIAL_NUMBER=$GAS_METER_SERIAL_NUMBER
+      - PYTHONBREAKPOINT=ipdb.set_trace
+      - SECRET_KEY=$SECRET_KEY
+      - USE_POSTGRES=1
+      - DB_HOST=db
+      - DB_NAME=consumption
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - DB_PORT=5432
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
