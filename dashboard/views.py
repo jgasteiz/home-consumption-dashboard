@@ -33,18 +33,25 @@ def consumption_dashboard(request):
     selected_date = localtime.parse_date(request.GET.get("date", date_list[0]))
     previous_date, next_date = localtime.get_previous_and_next_dates(date_list, selected_date)
 
-    consumption_on_date = consumption.get_consumption_on_date(selected_date)
-    usage_on_date = consumption.get_usage_on_date(consumption_on_date)
-    payable_on_date = consumption.get_payable_on_date(consumption_on_date)
+    elec_consumption_on_date = consumption.get_elec_consumption_on_date(selected_date)
+    gas_consumption_on_date = consumption.get_gas_consumption_on_date(selected_date)
+    elec_usage_on_date = consumption.get_usage_on_date(elec_consumption_on_date)
+    gas_usage_on_date = consumption.get_usage_on_date(gas_consumption_on_date)
+    payable_on_date = consumption.get_payable_on_date(elec_consumption_on_date + gas_consumption_on_date)
 
     return render(
         request,
         "dashboard/consumption.html",
         context={
-            "usage_on_date": usage_on_date,
+            "elec_usage_on_date": elec_usage_on_date,
+            "gas_usage_on_date": gas_usage_on_date,
             "payable_on_date": payable_on_date,
             # TODO: use a serializer for this
-            "consumption_json": json.dumps(consumption_on_date, cls=DjangoJSONEncoder),
+            "elec_consumption_json": json.dumps(elec_consumption_on_date, cls=DjangoJSONEncoder),
+            "gas_consumption_json": json.dumps(gas_consumption_on_date, cls=DjangoJSONEncoder),
+            # TODO: populate from somewhere else
+            "gas_unit_rate": consumption.GAS_UNIT_RATE,
+            "gas_standing_charge": consumption.GAS_STANDING_CHARGE,
             "selected_date": selected_date.isoformat(),
             "next_date": next_date,
             "previous_date": previous_date,

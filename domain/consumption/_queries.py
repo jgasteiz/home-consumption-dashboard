@@ -9,18 +9,42 @@ from data import models
 from domain import unit_rates
 
 __all__ = [
-    "get_consumption_on_date",
+    "get_elec_consumption_on_date",
+    "get_gas_consumption_on_date",
     "get_payable_on_date",
     "get_usage_on_date",
     "get_consumption_available_dates",
+    "ELEC_STANDING_CHARGE",
+    "GAS_UNIT_RATE",
+    "GAS_STANDING_CHARGE",
 ]
 
+# TODO: move this to env variables or settings
+ELEC_STANDING_CHARGE = decimal.Decimal("21")
+GAS_UNIT_RATE = decimal.Decimal("2.99")
+GAS_STANDING_CHARGE = decimal.Decimal("17.85")
 
-def get_consumption_on_date(date: datetime.date) -> List[dict]:
+
+def get_elec_consumption_on_date(date: datetime.date) -> List[dict]:
     """
-    Get consumption data on a given date.
+    Get elec consumption data on a given date.
     """
-    consumption_list = models.ElectricityConsumption.objects.filter(
+    return _get_consumption_on_date("ELEC", date)
+
+
+def get_gas_consumption_on_date(date: datetime.date) -> List[dict]:
+    """
+    Get gas consumption data on a given date.
+    """
+    return _get_consumption_on_date("GAS", date)
+
+
+def _get_consumption_on_date(fuel: str, date: datetime.date) -> List[dict]:
+    if fuel == "ELEC":
+        cls = models.ElectricityConsumption
+    else:
+        cls = models.GasConsumption
+    consumption_list = cls.objects.filter(
         interval_start__gte=localtime.midnight(date),
         interval_end__lte=localtime.next_midnight(date),
     ).order_by("interval_start")
@@ -46,7 +70,13 @@ def get_payable_on_date(consumption_entry_list: List[dict]) -> decimal.Decimal:
     Get payable in £ of a given list of consumption entries that contains the payable amount
     per entry in pence.
     """
-    return sum([entry["payable_in_pence"] for entry in consumption_entry_list]) / 100
+    # TODO: add support for single fuel accounts.
+    payable_in_pence = sum([
+        sum([entry["payable_in_pence"] for entry in consumption_entry_list]),
+        ELEC_STANDING_CHARGE,
+        GAS_STANDING_CHARGE,
+    ])
+    return payable_in_pence / 100
 
 
 def get_usage_on_date(consumption_entry_list: List[dict]) -> decimal.Decimal:

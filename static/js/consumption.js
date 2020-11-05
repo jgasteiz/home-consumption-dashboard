@@ -1,6 +1,7 @@
 /* global Chart */
 (() => {
-    const consumption = JSON.parse(document.getElementById('consumption').dataset.consumption);
+    const elecConsumption = JSON.parse(document.getElementById('consumption').dataset.elecConsumption);
+    const gasConsumption = JSON.parse(document.getElementById('consumption').dataset.gasConsumption);
     const chartColors = {
         red: 'rgb(255, 99, 132)',
         orange: 'rgb(255, 159, 64)',
@@ -11,27 +12,56 @@
         grey: 'rgb(201, 203, 207)'
     };
 
-    let consumptionData = [],
-        kwhPriceInPence = [],
-        amountPayableInPence = [],
-        consumptionLabels = [];
+    let elecConsumptionData = [],
+        gasConsumptionData = [],
+        elecKwhPriceInPence = [],
+        elecAmountPayableInPence = [],
+        elecConsumptionLabels = [],
+        gasConsumptionLabels = [];
 
-    consumption.forEach((c) => {
-        consumptionLabels.push(`${c["interval_start"]} to ${c["interval_end"]}`);
-        consumptionData.push(c["consumption"]);
-        kwhPriceInPence.push(c["value_inc_vat"]);
-        amountPayableInPence.push(c["payable_in_pence"]);
+    elecConsumption.forEach((c) => {
+        elecConsumptionLabels.push(`${c["interval_start"]} to ${c["interval_end"]}`);
+        elecConsumptionData.push(c["consumption"]);
+        elecKwhPriceInPence.push(c["value_inc_vat"]);
+        elecAmountPayableInPence.push(c["payable_in_pence"]);
+    });
+    gasConsumption.forEach((c) => {
+        gasConsumptionLabels.push(`${c["interval_start"]} to ${c["interval_end"]}`);
+        gasConsumptionData.push(c["consumption"]);
     });
 
-    // Consumption chart
-    new Chart(document.getElementById('chart-consumption'), {
+    // Elec consumption chart
+    new Chart(document.getElementById('chart-elec-consumption'), {
         type: 'bar',
         data: {
-            labels: consumptionLabels,
+            labels: elecConsumptionLabels,
             datasets: [{
                 backgroundColor: Chart.helpers.color(chartColors.blue).alpha(0.5).rgbString(),
                 label: 'kWh used',
-                data: consumptionData,
+                data: elecConsumptionData,
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+
+    // Gas consumption chart
+    new Chart(document.getElementById('chart-gas-consumption'), {
+        type: 'bar',
+        data: {
+            labels: gasConsumptionLabels,
+            datasets: [{
+                backgroundColor: Chart.helpers.color(chartColors.orange).alpha(0.5).rgbString(),
+                label: 'kWh used',
+                data: gasConsumptionData,
                 borderWidth: 1
             }]
         },
@@ -50,11 +80,11 @@
     new Chart(document.getElementById('chart-unit-rates'), {
         type: 'bar',
         data: {
-            labels: consumptionLabels,
+            labels: elecConsumptionLabels,
             datasets: [{
                 backgroundColor: Chart.helpers.color(chartColors.red).alpha(0.5).rgbString(),
                 label: 'kWh price in pence',
-                data: kwhPriceInPence,
+                data: elecKwhPriceInPence,
                 borderWidth: 1,
             }]
         },
@@ -73,11 +103,11 @@
     new Chart(document.getElementById('chart-payable'), {
         type: 'bar',
         data: {
-            labels: consumptionLabels,
+            labels: elecConsumptionLabels,
             datasets: [{
                 backgroundColor: Chart.helpers.color(chartColors.purple).alpha(0.5).rgbString(),
                 label: 'Amount payable in pence',
-                data: amountPayableInPence,
+                data: elecAmountPayableInPence,
                 borderWidth: 1
             }]
         },
