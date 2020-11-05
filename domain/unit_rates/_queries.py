@@ -1,7 +1,7 @@
 import datetime
 from typing import List
 
-from dailyconsumption import localtime
+from core import localtime
 from data import models
 
 __all__ = [

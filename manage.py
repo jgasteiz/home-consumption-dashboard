@@ -5,7 +5,7 @@ import sys
 
 
 def main():
-    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "dailyconsumption.settings")
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "core.settings")
     os.environ.setdefault("ENV_FILE", "./.env")
     try:
         from django.core.management import execute_from_command_line

@@ -3,7 +3,7 @@ import json
 from django.core.serializers.json import DjangoJSONEncoder
 from django.shortcuts import render
 
-from dailyconsumption import localtime
+from core import localtime
 from domain import consumption, unit_rates
 
 from . import serializers

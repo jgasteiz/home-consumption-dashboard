@@ -4,7 +4,7 @@ from typing import List
 
 from dateutil.relativedelta import relativedelta
 
-from dailyconsumption import localtime
+from core import localtime
 from data import models
 from domain import unit_rates
 
