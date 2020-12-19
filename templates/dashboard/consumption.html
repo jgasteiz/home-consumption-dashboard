@@ -32,25 +32,32 @@
 
     <h3>Electricity</h3>
 
-    <canvas id="chart-payable" width="100%"></canvas>
+    <canvas id="chart-elec-payable" width="100%"></canvas>
 
     <div class="row mb-4">
         <div class="col-lg-6">
             <canvas id="chart-elec-consumption" width="100%"></canvas>
         </div>
         <div class="col-lg-6">
-            <canvas id="chart-unit-rates" width="100%"></canvas>
+            <canvas id="chart-elec-unit-rates" width="100%"></canvas>
         </div>
     </div>
 
-    <h3>Gas</h3>
     <div class="row">
         <div class="col-lg-6">
-            <canvas id="chart-gas-consumption" width="100%"></canvas>
+            <h3>Gas</h3>
         </div>
         <div class="col-lg-6">
             <h4>Gas unit rate: {{ gas_unit_rate }} p/m3</h4>
             <h4>Gas standing charge: {{ gas_standing_charge }} p/day</h4>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-6">
+            <canvas id="chart-gas-payable" width="100%"></canvas>
+        </div>
+        <div class="col-lg-6">
+            <canvas id="chart-gas-consumption" width="100%"></canvas>
         </div>
     </div>
 

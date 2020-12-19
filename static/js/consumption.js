@@ -17,7 +17,8 @@
         elecKwhPriceInPence = [],
         elecAmountPayableInPence = [],
         elecConsumptionLabels = [],
-        gasConsumptionLabels = [];
+        gasConsumptionLabels = [],
+        gasAmountPayableInPence = [];
 
     elecConsumption.forEach((c) => {
         elecConsumptionLabels.push(`${c["interval_start"]} to ${c["interval_end"]}`);
@@ -28,6 +29,7 @@
     gasConsumption.forEach((c) => {
         gasConsumptionLabels.push(`${c["interval_start"]} to ${c["interval_end"]}`);
         gasConsumptionData.push(c["consumption"]);
+        gasAmountPayableInPence.push(c["payable_in_pence"]);
     });
 
     // Elec consumption chart
@@ -76,8 +78,8 @@
         }
     });
 
-    // Unit rates chart
-    new Chart(document.getElementById('chart-unit-rates'), {
+    // Elec unit rates chart
+    new Chart(document.getElementById('chart-elec-unit-rates'), {
         type: 'bar',
         data: {
             labels: elecConsumptionLabels,
@@ -99,8 +101,8 @@
         }
     });
 
-    // Payable chart
-    new Chart(document.getElementById('chart-payable'), {
+    // Elec payable chart
+    new Chart(document.getElementById('chart-elec-payable'), {
         type: 'bar',
         data: {
             labels: elecConsumptionLabels,
@@ -108,6 +110,29 @@
                 backgroundColor: Chart.helpers.color(chartColors.purple).alpha(0.5).rgbString(),
                 label: 'Amount payable in pence',
                 data: elecAmountPayableInPence,
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+
+    // Gas payable chart
+    new Chart(document.getElementById('chart-gas-payable'), {
+        type: 'bar',
+        data: {
+            labels: gasConsumptionLabels,
+            datasets: [{
+                backgroundColor: Chart.helpers.color(chartColors.purple).alpha(0.5).rgbString(),
+                label: 'Amount payable in pence',
+                data: gasAmountPayableInPence,
                 borderWidth: 1
             }]
         },
